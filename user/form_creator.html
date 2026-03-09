@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Form - AccessForm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body { padding: 20px; font-family: Arial, sans-serif; }
+        .field-item { border: 1px solid #ccc; padding: 10px; margin-bottom: 8px; background: #f9f9f9; cursor: grab; }
+        #formPreview { border: 1px dashed #ccc; padding: 10px; margin-top: 20px; min-height: 200px; }
+    </style>
+    <header class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold fs-3" href="dashboard.html">AccessForm</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="dashboard.html">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="form_creator.html">Create Form</a>
+                </li>
+                <li class="nav-item">
+                    <button id="highContrastBtn" class="btn btn-outline-dark btn-sm ms-2">High Contrast</button>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-danger fw-semibold ms-2" href="../login.html">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<!-- Add padding-top so page content doesn't hide under header -->
+<style>
+    body {
+        padding-top: 80px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* High contrast mode */
+    .high-contrast {
+        background-color: #000 !important;
+        color: #fff !important;
+    }
+    .high-contrast a {
+        color: #0ff !important;
+    }
+
+    /* Hover effects for links */
+    .navbar-nav .nav-link:hover {
+        color: #0d6efd !important;
+        text-decoration: underline;
+        transition: 0.3s;
+    }
+
+    /* Stylish brand */
+    .navbar-brand:hover {
+        color: #0d6efd;
+        transition: 0.3s;
+    }
+</style>
+
+<!-- High contrast toggle -->
+<script>
+    const highContrastBtn = document.getElementById('highContrastBtn');
+    highContrastBtn.addEventListener('click', () => {
+        document.body.classList.toggle('high-contrast');
+    });
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+     <?php include "../header/user_header.php"; ?>
+<br><br>
+    <h1>Create New Form</h1>
+    <label for="formTitle" class="form-label">Form Title:</label>
+    <input type="text" id="formTitle" class="form-control mb-3" placeholder="Enter form title">
+
+    <label for="formDesc" class="form-label">Form Description:</label>
+    <textarea id="formDesc" class="form-control mb-3" placeholder="Enter form description"></textarea>
+
+    <h3>Form Fields:</h3>
+    <div id="fieldsContainer" class="mb-3">
+        <button class="btn btn-sm btn-outline-primary addFieldBtn" data-type="text">Add Text Field</button>
+        <button class="btn btn-sm btn-outline-primary addFieldBtn" data-type="email">Add Email Field</button>
+        <button class="btn btn-sm btn-outline-primary addFieldBtn" data-type="number">Add Number Field</button>
+        <button class="btn btn-sm btn-outline-primary addFieldBtn" data-type="checkbox">Add Checkbox</button>
+        <button class="btn btn-sm btn-outline-primary addFieldBtn" data-type="radio">Add Radio</button>
+        <button class="btn btn-sm btn-outline-primary addFieldBtn" data-type="dropdown">Add Dropdown</button>
+    </div>
+
+    <h3>Form Preview:</h3>
+    <div id="formPreview" aria-live="polite"></div>
+
+    <button id="saveFormBtn" class="btn btn-success mt-3">Save Form (Simulated)</button>
+    <button id="goToRespondentBtn" class="btn btn-secondary mt-3">Go to Respondent View</button>
+
+    <script>
+        const formPreview = document.getElementById('formPreview');
+        const addFieldBtns = document.querySelectorAll('.addFieldBtn');
+        const saveFormBtn = document.getElementById('saveFormBtn');
+        const goToRespondentBtn = document.getElementById('goToRespondentBtn');
+
+        addFieldBtns.forEach(btn=>{
+            btn.addEventListener('click', ()=>{
+                const type = btn.dataset.type;
+                const label = prompt(`Enter label for ${type} field:`) || type;
+                let fieldHTML = '';
+                switch(type){
+                    case 'text':
+                    case 'email':
+                    case 'number':
+                        fieldHTML = `<label>${label}:</label><input type="${type}" class="form-control mb-2">`;
+                        break;
+                    case 'checkbox':
+                        fieldHTML = `<div class="form-check mb-2"><input type="checkbox" class="form-check-input"><label class="form-check-label">${label}</label></div>`;
+                        break;
+                    case 'radio':
+                        fieldHTML = `<div class="form-check mb-2"><input type="radio" class="form-check-input" name="radioGroup"><label class="form-check-label">${label}</label></div>`;
+                        break;
+                    case 'dropdown':
+                        fieldHTML = `<label>${label}:</label><select class="form-select mb-2"><option>Option 1</option><option>Option 2</option></select>`;
+                        break;
+                }
+                const fieldDiv = document.createElement('div');
+                fieldDiv.classList.add('field-item');
+                fieldDiv.innerHTML = fieldHTML;
+                formPreview.appendChild(fieldDiv);
+            });
+        });
+
+        saveFormBtn.addEventListener('click', ()=>{
+            alert('Form saved! (simulation, no backend)');
+        });
+
+        goToRespondentBtn.addEventListener('click', ()=>{
+            window.location.href = "respondent_form.html";
+        });
+    </script>
+</body>
+</html>
